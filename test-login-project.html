@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Login & Registration</title>
+  <style>
+    :root {
+      --primary: #5146e5;
+      --primary-dark: #4035c8;
+      --text: #20243a;
+      --muted: #747b91;
+      --border: #e4e7f0;
+      --background: #f4f6fc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      padding: 28px 16px; font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top left, #e8eaff, transparent 42%), var(--background);
+    }
+    .container {
+      width: min(100%, 440px); background: #fff; border: 1px solid #edf0f6;
+      border-radius: 20px; padding: 34px; box-shadow: 0 18px 55px rgba(35, 42, 85, .10);
+    }
+    .brand { text-align: center; margin-bottom: 26px; }
+    .brand-mark {
+      width: 48px; height: 48px; margin: 0 auto 14px; display: grid; place-items: center;
+      border-radius: 14px; color: white; background: var(--primary); font-size: 23px; font-weight: 800;
+    }
+    h1 { margin: 0 0 8px; font-size: 25px; letter-spacing: -.5px; }
+    .subtitle { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; background: #f1f2f8; border-radius: 11px; margin: 25px 0; }
+    .tab { border: 0; border-radius: 8px; padding: 11px; background: transparent; color: var(--muted); font-weight: 700; cursor: pointer; }
+    .tab.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px #20243a12; }
+    .field { margin-bottom: 17px; }
+    label { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 700; }
+    input {
+      width: 100%; height: 47px; padding: 0 13px; border: 1px solid var(--border);
+      border-radius: 9px; outline: none; font-size: 14px; color: var(--text); background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px #5146e51a; }
+    .password-wrap { position: relative; }
+    .password-wrap input { padding-right: 68px; }
+    .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: 0; background: none; color: var(--primary); font-size: 12px; font-weight: 700; cursor: pointer; }
+    .form-row { display: flex; justify-content: flex-end; margin: -5px 0 20px; }
+    a { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 700; }
+    a:hover { text-decoration: underline; }
+    .primary-btn {
+      width: 100%; min-height: 48px; border: 0; border-radius: 9px; color: white;
+      background: var(--primary); font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .primary-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .switch-text { margin: 22px 0 0; text-align: center; color: var(--muted); font-size: 13px; }
+    .switch-text button { border: 0; background: none; color: var(--primary); font-weight: 700; cursor: pointer; }
+    .message { display: none; margin: 0 0 16px; padding: 11px 12px; border-radius: 8px; font-size: 13px; line-height: 1.45; }
+    .message.show { display: block; }
+    .message.success { background: #eaf8f0; color: #176b3a; }
+    .message.error { background: #fff0f0; color: #a52c2c; }
+    .hidden { display: none !important; }
+    .back-link { display: inline-block; margin-bottom: 20px; }
+    .footer { margin-top: 23px; text-align: center; color: #9aa0b1; font-size: 11px; }
+    @media (max-width: 420px) { .container { padding: 27px 21px; } }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header class="brand">
+      <div class="brand-mark">T</div>
+      <h1 id="heading">Welcome back</h1>
+      <p class="subtitle" id="subheading">Sign in to continue to your account</p>
+    </header>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" type="button" data-mode="login">Login</button>
+      <button class="tab" type="button" data-mode="register">Register</button>
+    </div>
+
+    <div class="message" id="message" role="status" aria-live="polite"></div>
+
+    <form id="authForm">
+      <div class="field hidden" id="nameField">
+        <label for="name">Full Name</label>
+        <input id="name" name="name" type="text" placeholder="Enter your full name" autocomplete="name">
+      </div>
+      <div class="field hidden" id="mobileField">
+        <label for="mobile">Mobile Number</label>
+        <input id="mobile" name="mobile" type="tel" placeholder="Enter your mobile number" autocomplete="tel" inputmode="tel">
+      </div>
+      <div class="field" id="emailField">
+        <label for="email">Email Address</label>
+        <input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="email" required>
+      </div>
+      <div class="field" id="passwordField">
+        <label for="password">Password</label>
+        <div class="password-wrap">
+          <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required minlength="6">
+          <button class="toggle-password" type="button" id="togglePassword">Show</button>
+        </div>
+      </div>
+      <div class="form-row" id="forgotRow">
+        <a href="#" id="forgotLink">Forgot password?</a>
+      </div>
+      <button class="primary-btn" id="submitBtn" type="submit">Login</button>
+    </form>
+
+    <p class="switch-text" id="switchText">Don't have an account? <button type="button" id="switchMode">Register Now</button></p>
+    <div class="footer">Test UI only · No data is sent to a server</div>
+  </main>
+
+  <script>
+    const form = document.getElementById('authForm');
+    const heading = document.getElementById('heading');
+    const subheading = document.getElementById('subheading');
+    const tabs = document.getElementById('tabs');
+    const nameField = document.getElementById('nameField');
+    const mobileField = document.getElementById('mobileField');
+    const passwordField = document.getElementById('passwordField');
+    const forgotRow = document.getElementById('forgotRow');
+    const submitBtn = document.getElementById('submitBtn');
+    const switchText = document.getElementById('switchText');
+    const message = document.getElementById('message');
+    const password = document.getElementById('password');
+    let mode = 'login';
+
+    function showMessage(text, type = 'success') {
+      message.textContent = text;
+      message.className = `message show ${type}`;
+    }
+    function clearMessage() {
+      message.textContent = '';
+      message.className = 'message';
+    }
+    function setMode(nextMode) {
+      mode = nextMode;
+      clearMessage();
+      tabs.classList.toggle('hidden', mode === 'forgot');
+      nameField.classList.toggle('hidden', mode !== 'register');
+      mobileField.classList.toggle('hidden', mode !== 'register');
+      passwordField.classList.toggle('hidden', mode === 'forgot');
+      forgotRow.classList.toggle('hidden', mode !== 'login');
+
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.mode === mode);
+      });
+
+      if (mode === 'login') {
+        heading.textContent = 'Welcome back';
+        subheading.textContent = 'Sign in to continue to your account';
+        submitBtn.textContent = 'Login';
+        switchText.innerHTML = `Don't have an account? <button type="button" id="switchMode">Register Now</button>`;
+      } else if (mode === 'register') {
+        heading.textContent = 'Create an account';
+        subheading.textContent = 'Fill in your details to get started';
+        submitBtn.textContent = 'Register Now';
+        switchText.innerHTML = `Already have an account? <button type="button" id="switchMode">Login</button>`;
+      } else {
+        heading.textContent = 'Reset password';
+        subheading.textContent = 'Enter your email address to receive reset instructions';
+        submitBtn.textContent = 'Send Reset Link';
+        switchText.innerHTML = `<button type="button" id="switchMode">Back to Login</button>`;
+      }
+      document.getElementById('switchMode').addEventListener('click', () => setMode(mode === 'login' ? 'register' : 'login'));
+      password.required = mode !== 'forgot';
+    }
+
+    tabs.addEventListener('click', event => {
+      const tab = event.target.closest('[data-mode]');
+      if (tab) setMode(tab.dataset.mode);
+    });
+    document.getElementById('switchMode').addEventListener('click', () => setMode('register'));
+    document.getElementById('forgotLink').addEventListener('click', event => {
+      event.preventDefault();
+      setMode('forgot');
+    });
+    document.getElementById('togglePassword').addEventListener('click', event => {
+      const visible = password.type === 'text';
+      password.type = visible ? 'password' : 'text';
+      event.currentTarget.textContent = visible ? 'Show' : 'Hide';
+    });
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      clearMessage();
+      if (!form.reportValidity()) return;
+
+      if (mode === 'register') {
+        showMessage('Demo registration submitted. Connect a backend to create an account.');
+      } else if (mode === 'login') {
+        showMessage('Demo login submitted. Connect an authentication API to verify credentials.');
+      } else {
+        showMessage('If this email is registered, password reset instructions would be sent. Connect an email/reset API to enable this feature.');
+      }
+    });
+  </script>
+</body>
+</html>
